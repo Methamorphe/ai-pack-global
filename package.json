@@ -15,5 +15,5 @@
   "repository": {"type":"git","url":"git+https://github.com/Methamorphe/ai-pack-global.git"},
   "homepage": "https://github.com/Methamorphe/ai-pack-global#readme",
   "bugs": {"url":"https://github.com/Methamorphe/ai-pack-global/issues"},
-  "publishConfig": {"access":"public","provenance":true}
+  "publishConfig": {"access":"public"}
 }
