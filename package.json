@@ -1,19 +1,49 @@
 {
   "name": "@methamorphe/ai-pack-global",
-  "version": "3.0.0",
-  "description": "Global Cursor and Codex engineering rules, agents, skills and context/token optimization.",
+  "version": "3.1.0",
+  "description": "Global Cursor, Codex and Claude Code engineering rules, agents, skills and context/token optimization.",
   "type": "module",
-  "bin": {"install-ai-global": "./bin/install-ai-global.js"},
-  "files": ["bin","templates","install-ai-global.sh","uninstall-ai-global.sh","README.md","LICENSE"],
+  "bin": {
+    "install-ai-global": "./bin/install-ai-global.js"
+  },
+  "files": [
+    "bin",
+    "templates",
+    "install-ai-global.sh",
+    "uninstall-ai-global.sh",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "check": "bash -n install-ai-global.sh && bash -n uninstall-ai-global.sh && node bin/install-ai-global.js --help >/dev/null",
     "pack:dry-run": "npm pack --dry-run --ignore-scripts"
   },
-  "engines": {"node": ">=20"},
-  "keywords": ["cursor","codex","ai","agents","skills","rules","context","tokens","developer-tools"],
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "cursor",
+    "codex",
+    "claude",
+    "claude-code",
+    "ai",
+    "agents",
+    "skills",
+    "rules",
+    "context",
+    "tokens",
+    "developer-tools"
+  ],
   "license": "MIT",
-  "repository": {"type":"git","url":"git+https://github.com/Methamorphe/ai-pack-global.git"},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Methamorphe/ai-pack-global.git"
+  },
   "homepage": "https://github.com/Methamorphe/ai-pack-global#readme",
-  "bugs": {"url":"https://github.com/Methamorphe/ai-pack-global/issues"},
-  "publishConfig": {"access":"public"}
+  "bugs": {
+    "url": "https://github.com/Methamorphe/ai-pack-global/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

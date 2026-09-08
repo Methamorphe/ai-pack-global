@@ -1,8 +1,8 @@
-# AI Global Pack v3
+# AI Global Pack v3.1
 
-Global Cursor + Codex engineering setup with context/token optimization.
+Global AI coding setup for **Cursor, Codex and Claude Code**.
 
-This package installs only global configuration under `~/.cursor` and `~/.codex`. It never modifies project-local `.cursor/` or `.codex/` folders.
+It installs only user-level/global configuration and never touches project-local `.cursor`, `.codex`, or `.claude` folders.
 
 ## Quick start
 
@@ -10,37 +10,50 @@ This package installs only global configuration under `~/.cursor` and `~/.codex`
 npx @methamorphe/ai-pack-global
 ```
 
-Cursor only:
+All three targets are installed by default:
+
+```text
+Cursor + Codex + Claude Code
+```
+
+Target one tool:
 
 ```bash
 npx @methamorphe/ai-pack-global --cursor-only
-```
-
-Codex only:
-
-```bash
 npx @methamorphe/ai-pack-global --codex-only
+npx @methamorphe/ai-pack-global --claude-only
 ```
 
-Preview changes:
+## Installed layout
 
-```bash
-npx @methamorphe/ai-pack-global --dry-run
+```text
+~/.cursor/
+├── rules/engineering.mdc
+├── agents/
+└── skills/
+
+~/.codex/
+├── rules/engineering.md
+├── agents/
+└── skills/
+
+~/.claude/
+├── CLAUDE.md
+├── agents/
+└── skills/
 ```
 
-Uninstall known managed files:
+If `CLAUDE_CONFIG_DIR` is set, Claude Code files are installed there instead of `~/.claude`.
 
-```bash
-npx @methamorphe/ai-pack-global uninstall
-```
+## Claude Code integration
 
-## Installed globally
+The global engineering instructions are inserted into a managed section of `~/.claude/CLAUDE.md`, preserving content outside the AI Pack markers.
 
-### Rules
+Shared `SKILL.md` files are installed directly into `~/.claude/skills/`.
 
-A production engineering rule covering existing vs greenfield work, architecture discipline, debugging, context budgets, targeted verification, and concise communication.
+Claude-specific subagent definitions are installed into `~/.claude/agents/` using Claude Code's native frontmatter. The `researcher` agent uses Haiku with low effort to keep broad exploration fast and token-efficient; architecture/debug/review agents use isolated contexts with task-appropriate effort.
 
-### Agents
+## Included agents
 
 - researcher
 - architect
@@ -49,7 +62,7 @@ A production engineering rule covering existing vs greenfield work, architecture
 - ui-designer
 - visual-reviewer
 
-### Skills
+## Included skills
 
 - architecture
 - deep-debug
@@ -68,31 +81,66 @@ A production engineering rule covering existing vs greenfield work, architecture
 - context-optimizer
 - context-report
 
+## Context/token optimization
+
+The global rule emphasizes:
+
+- progressive repository disclosure
+- targeted reads before broad exploration
+- filtered command/log output
+- subagents only when isolation/parallelism helps
+- fresh threads for unrelated tasks
+- targeted verification first
+
+For Claude Code specifically, the installed instructions also recommend `/context` when diagnosing context usage and `/compact` when continuing the same long-running task.
+
 ## Safety / existing config
 
-Existing files are kept by default. Use `--force` to replace managed files; replacements are backed up under `~/.ai-global-backups/` unless `--no-backup` is passed.
+Existing files are preserved unless `--force` is used.
 
-## Symlink mode
+Before replacement, backups are stored under:
 
-For normal `npx` usage prefer copy mode. `--symlink` is intended for a persistent local clone because temporary npx directories can be cleaned up.
+```text
+~/.ai-global-backups/<timestamp>/
+```
 
-## Local development
+Claude's global `CLAUDE.md` is merged using managed markers rather than replaced wholesale.
+
+## Options
+
+```text
+--cursor-only
+--codex-only
+--claude-only
+--force
+--dry-run
+--no-backup
+--symlink
+--copy
+```
+
+`--symlink` applies to rules, agents and skills. The managed Claude `CLAUDE.md` section is written normally so existing personal instructions can coexist.
+
+## Uninstall
+
+```bash
+npx @methamorphe/ai-pack-global uninstall
+```
+
+Or only Claude Code:
+
+```bash
+npx @methamorphe/ai-pack-global uninstall --claude-only
+```
+
+The Claude uninstaller removes only the managed AI Pack section from `CLAUDE.md` and the known installed agents/skills.
+
+## Development
 
 ```bash
 npm run check
 npm run pack:dry-run
 ```
-
-## Publishing
-
-First public publish:
-
-```bash
-npm login
-npm publish --access public
-```
-
-After the package exists on npm, configure npm Trusted Publishing for this GitHub repository, then publish releases by pushing `v*` tags.
 
 ## License
 
