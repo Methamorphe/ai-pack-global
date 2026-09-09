@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-VERSION="3.1.0"
+VERSION="3.2.0"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 T="$ROOT/templates/global"
 
 CURSOR=1
 CODEX=1
 CLAUDE=1
+COPILOT=1
 FORCE=0
 DRY=0
 NO_BACKUP=0
@@ -15,12 +16,13 @@ MODE="copy"
 
 usage(){
 cat <<'EOF'
-AI Global Pack v3.1 — Cursor + Codex + Claude Code
+AI Global Pack v3.2 — Cursor + Codex + Claude Code + GitHub Copilot
 
 Installs global rules, agents and skills into:
   ~/.cursor
   ~/.codex
   ${CLAUDE_CONFIG_DIR:-~/.claude}
+  ~/.copilot
 
 Never touches project-local configuration.
 
@@ -30,6 +32,7 @@ Usage:
   ./install-ai-global.sh --cursor-only
   ./install-ai-global.sh --codex-only
   ./install-ai-global.sh --claude-only
+  ./install-ai-global.sh --copilot-only
   ./install-ai-global.sh --force
   ./install-ai-global.sh --symlink
 
@@ -37,6 +40,7 @@ Options:
   --cursor-only
   --codex-only
   --claude-only
+  --copilot-only
   --force
   --dry-run
   --no-backup
@@ -49,9 +53,10 @@ EOF
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --cursor-only) CURSOR=1; CODEX=0; CLAUDE=0; shift ;;
-    --codex-only) CURSOR=0; CODEX=1; CLAUDE=0; shift ;;
-    --claude-only) CURSOR=0; CODEX=0; CLAUDE=1; shift ;;
+    --cursor-only) CURSOR=1; CODEX=0; CLAUDE=0; COPILOT=0; shift ;;
+    --codex-only) CURSOR=0; CODEX=1; CLAUDE=0; COPILOT=0; shift ;;
+    --claude-only) CURSOR=0; CODEX=0; CLAUDE=1; COPILOT=0; shift ;;
+    --copilot-only) CURSOR=0; CODEX=0; CLAUDE=0; COPILOT=1; shift ;;
     --force) FORCE=1; shift ;;
     --dry-run) DRY=1; shift ;;
     --no-backup) NO_BACKUP=1; shift ;;
@@ -65,6 +70,7 @@ done
 
 HOME_DIR="${HOME:?HOME not set}"
 CLAUDE_HOME="${CLAUDE_CONFIG_DIR:-$HOME_DIR/.claude}"
+COPILOT_HOME="$HOME_DIR/.copilot"
 STAMP="$(date +%Y%m%d-%H%M%S)"
 BACKUP="$HOME_DIR/.ai-global-backups/$STAMP"
 
@@ -126,8 +132,15 @@ if [[ $CLAUDE -eq 1 ]]; then
   install_tree "$T/skills" "$CLAUDE_HOME/skills"
 fi
 
+if [[ $COPILOT -eq 1 ]]; then
+  info "Installing VS Code / GitHub Copilot global config"
+  install_tree "$T/copilot/instructions" "$COPILOT_HOME/instructions"
+  install_tree "$T/copilot/agents" "$COPILOT_HOME/agents"
+  install_tree "$T/skills" "$COPILOT_HOME/skills"
+fi
+
 echo
-echo "AI Global Pack v3.1 complete."
+echo "AI Global Pack v3.2 complete."
 echo "Mode: $MODE"
-echo "Targets: Cursor=$CURSOR Codex=$CODEX Claude=$CLAUDE"
+echo "Targets: Cursor=$CURSOR Codex=$CODEX Claude=$CLAUDE Copilot=$COPILOT"
 echo "No project-local files were modified."
