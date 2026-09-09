@@ -1,27 +1,28 @@
-# AI Global Pack v3.1
+# AI Global Pack v3.2
 
-Global AI coding setup for **Cursor, Codex and Claude Code**.
+Global AI coding setup for **Cursor, Codex, Claude Code and VS Code / GitHub Copilot**.
 
-It installs only user-level/global configuration and never touches project-local `.cursor`, `.codex`, or `.claude` folders.
+It installs only user-level/global configuration and never touches project-local configuration.
 
 ## Quick start
 
 ```bash
-npx @methamorphe/ai-pack-global
+npx @methamorphe/ai-pack-global@latest
 ```
 
-All three targets are installed by default:
+All four targets are installed by default:
 
 ```text
-Cursor + Codex + Claude Code
+Cursor + Codex + Claude Code + GitHub Copilot
 ```
 
 Target one tool:
 
 ```bash
-npx @methamorphe/ai-pack-global --cursor-only
-npx @methamorphe/ai-pack-global --codex-only
-npx @methamorphe/ai-pack-global --claude-only
+npx @methamorphe/ai-pack-global@latest --cursor-only
+npx @methamorphe/ai-pack-global@latest --codex-only
+npx @methamorphe/ai-pack-global@latest --claude-only
+npx @methamorphe/ai-pack-global@latest --copilot-only
 ```
 
 ## Installed layout
@@ -41,26 +42,34 @@ npx @methamorphe/ai-pack-global --claude-only
 ├── CLAUDE.md
 ├── agents/
 └── skills/
+
+~/.copilot/
+├── instructions/
+│   └── engineering.instructions.md
+├── agents/
+└── skills/
 ```
 
 If `CLAUDE_CONFIG_DIR` is set, Claude Code files are installed there instead of `~/.claude`.
 
-## Claude Code integration
+## GitHub Copilot / VS Code integration
 
-The global engineering instructions are inserted into a managed section of `~/.claude/CLAUDE.md`, preserving content outside the AI Pack markers.
+VS Code discovers user-level Copilot customizations from `~/.copilot`:
 
-Shared `SKILL.md` files are installed directly into `~/.claude/skills/`.
+- `~/.copilot/instructions/*.instructions.md` for personal instructions across workspaces
+- `~/.copilot/agents/*.agent.md` for reusable custom agents
+- `~/.copilot/skills/*/SKILL.md` for Agent Skills
 
-Claude-specific subagent definitions are installed into `~/.claude/agents/` using Claude Code's native frontmatter. The `researcher` agent uses Haiku with low effort to keep broad exploration fast and token-efficient; architecture/debug/review agents use isolated contexts with task-appropriate effort.
+The engineering instruction uses `applyTo: "**"` so the global engineering/context rules apply across workspaces. Shared Agent Skills are reused directly because VS Code/Copilot supports the Agent Skills standard.
 
-## Included agents
+Included Copilot agents:
 
-- researcher
-- architect
-- debugger
-- reviewer
-- ui-designer
-- visual-reviewer
+- Researcher
+- Architect
+- Debugger
+- Reviewer
+- UI Designer
+- Visual Reviewer
 
 ## Included skills
 
@@ -83,22 +92,11 @@ Claude-specific subagent definitions are installed into `~/.claude/agents/` usin
 
 ## Context/token optimization
 
-The global rule emphasizes:
-
-- progressive repository disclosure
-- targeted reads before broad exploration
-- filtered command/log output
-- subagents only when isolation/parallelism helps
-- fresh threads for unrelated tasks
-- targeted verification first
-
-For Claude Code specifically, the installed instructions also recommend `/context` when diagnosing context usage and `/compact` when continuing the same long-running task.
+The global rules emphasize progressive repository disclosure, targeted reads, filtered command output, isolated agents only when useful, fresh threads for unrelated tasks, and targeted verification first.
 
 ## Safety / existing config
 
-Existing files are preserved unless `--force` is used.
-
-Before replacement, backups are stored under:
+Existing files are preserved unless `--force` is used. Before replacement, backups are stored under:
 
 ```text
 ~/.ai-global-backups/<timestamp>/
@@ -112,6 +110,7 @@ Claude's global `CLAUDE.md` is merged using managed markers rather than replaced
 --cursor-only
 --codex-only
 --claude-only
+--copilot-only
 --force
 --dry-run
 --no-backup
@@ -119,21 +118,17 @@ Claude's global `CLAUDE.md` is merged using managed markers rather than replaced
 --copy
 ```
 
-`--symlink` applies to rules, agents and skills. The managed Claude `CLAUDE.md` section is written normally so existing personal instructions can coexist.
-
 ## Uninstall
 
 ```bash
-npx @methamorphe/ai-pack-global uninstall
+npx @methamorphe/ai-pack-global@latest uninstall
 ```
 
-Or only Claude Code:
+Or only GitHub Copilot:
 
 ```bash
-npx @methamorphe/ai-pack-global uninstall --claude-only
+npx @methamorphe/ai-pack-global@latest uninstall --copilot-only
 ```
-
-The Claude uninstaller removes only the managed AI Pack section from `CLAUDE.md` and the known installed agents/skills.
 
 ## Development
 
