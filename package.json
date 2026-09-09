@@ -1,6 +1,6 @@
 {
   "name": "@methamorphe/ai-pack-global",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "Global Cursor, Codex, Claude Code and GitHub Copilot engineering rules, agents, skills and context/token optimization.",
   "type": "module",
   "bin": {
